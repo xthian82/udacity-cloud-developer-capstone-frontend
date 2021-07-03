@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - 13
+
+services:
+  - docker
+
+# Pre-testing install
+install:
+  - echo "nothing needs to be installed"
+
+# Scripts to be run
+before_script:
+  - echo "no tests"
+
+script:
+  - docker --version
+  - docker build -t udacity-front-capstone:v0.0.1 .
+  - docker tag udacity-front-capstone:v0.0.1 xthian82/udacity-front-capstone:v0.0.1
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push xthian82/udacity-front-capstone:v0.0.1

@@ -1,0 +1,100 @@
+.next-steps .fa-link {
+    margin-right: 5px;
+}
+
+/* Fix for use only flexbox in content area */
+.next-steps .row {
+    margin-bottom: 0;
+}
+
+.next-steps .col-md-5 {
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .next-steps .col-md-5 {
+        margin-bottom: 0;
+    }
+}
+
+.spinner {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: white;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.result-block-container .result-block {
+    opacity: 1;
+}
+
+body {
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
+.text-slanted {
+    font-family: 'Croissant One', cursive;
+    font-size: xxx-large;
+}
+
+.text-publisher-med {
+    font-family: 'Croissant One', cursive;
+    font-size: larger;
+}
+
+.text-publisher {
+    font-family: 'Croissant One', cursive;
+    font-size: small;
+}
+
+.text-footer {
+    /* font-family: 'Cookie', cursive; */
+    font-size: small;
+}
+
+.text-body-img {
+   font-family: 'Merriweather Sans', sans-serif; /*'Oswald', sans-serif, cursive; */
+   font-size: xx-large !important;
+}
+
+.text-ingredient {
+   font-family: 'Cookie', cursive;
+   font-size: x-large;
+}
+
+.text-ingredient-detail {
+    font-family: 'Cookie', cursive;
+    font-size: medium;
+}
+
+.top-round-20 {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    -webkit-border-top-right-radius: 20px;
+    -webkit-border-top-left-radius: 20px;
+}
+
+.bottom-round-20 {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    -webkit-border-bottom-right-radius: 20px;
+    -webkit-border-bottom-left-radius: 20px;
+}
+
+.full-round-22 {
+    border-radius: 2em;
+}
+
+.nav-logo {
+    background-image: url("assets/hood.png");
+    width: 7rem;
+    height: 5rem;
+    background-repeat: space;
+    background-size: contain;
+}
