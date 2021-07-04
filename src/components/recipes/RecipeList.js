@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import RecipeItem from "./RecipeItem";
 import RecipeSearch from "./RecipeSearch";
+import _ from "lodash";
 
 class RecipeList extends Component {
    render() {
@@ -30,16 +31,16 @@ class RecipeList extends Component {
                </div>
                { /* end of title */}
                <div className="row">
-                  {error
-                     ? <h1 className="text-danger text-center">{error}</h1>
-                     : recipes.map(recipe => {
-                           return (
-                              <RecipeItem key={recipe.recipe_id}
-                                          recipe={recipe}
-                                          handleDetails={handleDetails} />
-                           );
-                        })
+
+                  {!_.isEmpty(recipes) ? (
+                           recipes.map((recipe) => (
+                              <RecipeItem key={recipe.recipeId} recipe={recipe} handleDetails={handleDetails} />
+                           ))
+                        ) : (
+                              <p className="message">No Recipes found, change your query to try new results.</p>
+                           )
                   }
+
                </div>
             </div>
          </React.Fragment>

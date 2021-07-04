@@ -17,15 +17,13 @@ export const uploadFileToBucket = async (uploadUrl, file) => {
 }
 
 export const searchRecipes = async (searchQuery) =>{
-   console.log(`Searching recipes with query [${searchQuery}]`)
 
    const response = await axios.get(`${apiEndpoint}/search-recipe${searchQuery ? ('?q='+searchQuery) : ''}`, {
       headers: {
          'Content-Type': 'application/json'
       },
    })
-   console.log('searching response:', response.data)
-   return response.data?.item
+   return response.data?.items
 }
 
 export const getRecipes = async (idToken) => {
@@ -39,7 +37,6 @@ export const getRecipes = async (idToken) => {
 }
 
 export const getRecipeById = async (idToken, recipeId) => {
-   console.log(`getting recipe ${recipeId}`)
    const response = await axios.get(`${apiEndpoint}/recipe/${recipeId}`, {
       headers: {
          'Content-Type': 'application/json',
@@ -49,20 +46,17 @@ export const getRecipeById = async (idToken, recipeId) => {
    return response.data.items
 }
 
+export const getRecipeDetail = async (recipeId) => {
+   const response = await axios.get(`${apiEndpoint}/public/recipe/${recipeId}`, {
+      headers: {
+         'Content-Type': 'application/json'
+      }})
+
+   return response.data.items
+}
+
 export const createRecipe = async (idToken, newRecipe) => {
-  /* let item = {
-      title: newRecipe.title
-   }
 
-   if (newRecipe.category) {
-      item.category = newRecipe.category
-   }
-
-   if (newRecipe.ingredients) {
-      item.ingredients = newRecipe.ingredients
-   }*/
-
-   console.log(`creating recipe ${JSON.stringify(newRecipe)}`)
    const response = await axios.post(`${apiEndpoint}/recipes`, JSON.stringify(newRecipe), {
       headers: {
          'Content-Type': 'application/json',
@@ -76,7 +70,6 @@ export const createRecipe = async (idToken, newRecipe) => {
 }
 
 export const patchRecipe = async (idToken, recipeId, updatedRecipe) => {
-   console.log(`updating recipe ${JSON.stringify(updatedRecipe)}`)
    await axios.patch(`${apiEndpoint}/recipes/${recipeId}`, JSON.stringify(updatedRecipe),{
       headers: {
          'Content-Type': 'application/json',
@@ -90,7 +83,6 @@ export const patchRecipe = async (idToken, recipeId, updatedRecipe) => {
 }
 
 export const deleteRecipe = async (idToken, recipeId) => {
-   console.log(`deleting recipe ${recipeId}`)
    await axios.delete(`${apiEndpoint}/recipes/${recipeId}`, {
       headers: {
          'Content-Type': 'application/json',
