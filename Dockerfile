@@ -12,12 +12,12 @@ COPY package.json ./
 
 COPY package-lock.json ./
 
+COPY auth_config.json ./
+
 RUN npm install
 
-#RUN npm install react-scripts@3.4.1 -g
 RUN npm install react-scripts -g
 
-#RUN npm audit fix
 
 # add app
 COPY . ./
