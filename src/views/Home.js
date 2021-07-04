@@ -1,160 +1,122 @@
-import React, {Component, Fragment} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import ReactPaginate from 'react-paginate';
 
 import RecipeList from "../components/recipes/RecipeList";
-import RecipeDetails from "../components/recipes/RecipeDetails";
-import {recipes} from "../utils/tempList";
+import {searchRecipes} from "../api/backend-api";
 
-class Home extends Component {
+export const Home = () => {
+   const [recipes, setRecipes] = useState([])
+   const [pageCount, setPageCount] = useState(1)
+   const [search, setSearch] = useState("")
+   const [query, setQuery] = useState(null)
+   const [error, setError] = useState(null)
+   const [current, setCurrent] = useState({})
 
-   state = {
-      recipes: [],
-      url: 'http://localhost:4200/api/recipes',
-      base_url: 'http://localhost:4200/api/recipes/search',
-      details_id: 35382,
-      pageIndex: 1,
-      search:'',
-      query:'?q=',
-      currentPage: 0,
-      offset:0,
-      recipesPerPage: 9
-   };
+   const [currentPage, setCurrentPage] = useState(0)
+   const [offset, setOffset] = useState(0)
+   const recipesPerPage = 9
 
-
-   getRecipes() {
+   const getRecipes = () => {
       try {
-        /* const data = await fetch(url);
-         const jsonData = await data.json();
-         if (jsonData.recipes.length === 0) {
-            this.setState(() => {
-               return {error: "search didn't result any match"}
-            })
-         } else {
-            this.setState(() => {
-               return {recipes: jsonData.recipes}
-            })
-         }*/
-         const data = recipes.slice(this.state.offset, this.state.offset + this.state.recipesPerPage);
+         const data = recipes.slice(offset, offset + recipesPerPage);
 
-         this.setState({
-            recipes: data,
-            pageCount: Math.ceil(recipes.length / this.state.recipesPerPage)
-         });
+         setRecipes(data)
+         setPageCount(Math.ceil(recipes.length / recipesPerPage))
       } catch (e) {
          console.log(e);
       }
-   };
-
-   componentDidMount()
-   {
-      this.getRecipes();
    }
 
+   const handleDetails = (index, id) => {
 
-   handleIndex = (index) => {
-      this.setState({
-         pageIndex: index
-      })
+      const current = recipes.filter((recipe) => recipe.recipeId === id)
+      setCurrent(current)
    }
 
-   handleDetails = (index, id) => {
-      this.setState({
-         pageIndex: index,
-         details_id: id
-      })
-   }
-
-   handlePageClick = (e) => {
+   const handlePageClick = (e) => {
       const selectedPage = e.selected;
-      const offset = selectedPage * this.state.recipesPerPage;
+      const offset = selectedPage * recipesPerPage;
 
-      this.setState({
-         currentPage: selectedPage,
-         offset: offset
-      }, () => {
-         this.getRecipes()
-      });
+      setCurrentPage(selectedPage)
+      setOffset(offset)
 
+      getRecipes()
    };
 
-   displayPage = (index) => {
-      switch (index) {
-         default:
-         case 1:
-            return (
-               <div>
-               <RecipeList recipes={this.state.recipes}
-                  handleDetails={this.handleDetails}
-                  value={this.state.search}
-                  handleChange={this.handleChange}
-                  handleSubmit={this.handleSubmit}
-                           error={this.state.error} />
+   const displayPage = () => {
+      return (
+         <div>
+         <RecipeList recipes={recipes}
+            handleDetails={handleDetails}
+            value={search}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+                     error={error} />
 
-                  <div className="container">
-                     <div className="row">
-                     <div className="col-10 mx-auto col-md-1 text-center p-1">
+            <div className="container">
+               <div className="row">
+               <div className="col-10 mx-auto col-md-1 text-center p-1">
 
-                  <ReactPaginate
-                     previousLabel={"<"}
-                     nextLabel={">"}
-                     breakLabel={"..."}
-                     breakClassName={"page-item"}
-                     breakLinkClassName={"page-link"}
-                     containerClassName={"pagination"}
-                     pageClassName={"page-item"}
-                     pageLinkClassName={"page-link"}
-                     previousClassName={"page-item"}
-                     previousLinkClassName={"page-link"}
-                     nextClassName={"page-item"}
-                     nextLinkClassName={"page-link"}
-                     subContainerClassName={"pages pagination"}
-                     pageCount={this.state.pageCount}
-                     marginPagesDisplayed={3}
-                     pageRangeDisplayed={6}
-                     onPageChange={this.handlePageClick}
-                     activeClassName={"active"}/>
-                  </div>
-                  </div>
-                  </div>
-               </div>
-            )
-         case 0:
-            return (
-               <RecipeDetails id={this.state.details_id} handleIndex={this.handleIndex}/>
-            )
-      }
+            <ReactPaginate
+               previousLabel={"<"}
+               nextLabel={">"}
+               breakLabel={"..."}
+               breakClassName={"page-item"}
+               breakLinkClassName={"page-link"}
+               containerClassName={"pagination"}
+               pageClassName={"page-item"}
+               pageLinkClassName={"page-link"}
+               previousClassName={"page-item"}
+               previousLinkClassName={"page-link"}
+               nextClassName={"page-item"}
+               nextLinkClassName={"page-link"}
+               subContainerClassName={"pages pagination"}
+               pageCount={pageCount}
+               marginPagesDisplayed={3}
+               pageRangeDisplayed={6}
+               onPageChange={handlePageClick}
+               activeClassName={"active"}/>
+            </div>
+            </div>
+            </div>
+         </div>
+      )
    }
 
-   handleChange = (e) => {
-      this.setState({
-         search: e.target.value
-      });
-      console.log('hello from handle change');
+   const handleChange = (e) => {
+      setSearch(e.target.value)
    }
 
-   handleSubmit = (e) => {
+   const handleSubmit = (e) => {
       e.preventDefault();
 
-      const {base_url, query, search} = this.state;
-      console.log(`hello from handle submit base=${base_url}, q=${query}, s=${search}`);
-      this.setState(() => {
-         return {
-            url: `${base_url}${query}${search}`,
-            search: ""
-         }}, () => {
-         this.getRecipes()
-      });
+      setQuery(search)
+      setSearch("")
    }
 
-   render()
-   {
-      return (
-         <Fragment>
-            { this.displayPage(this.state.pageIndex) }
-         </Fragment>
-      );
-   }
+   useEffect(() => {
+      async function fetchData() {
+         try {
+            console.log(`fetching recipes with q=${query}`)
+            const response = await searchRecipes(query)
+            setRecipes(response)
+         } catch (error) {
+            console.log(error);
+         }
+      }
 
-};
+      fetchData()
+
+      return () => {}
+   }, [query]);
+
+
+   return (
+      <Fragment>
+         { displayPage() }
+      </Fragment>
+   )
+
+}
 
 export default Home;

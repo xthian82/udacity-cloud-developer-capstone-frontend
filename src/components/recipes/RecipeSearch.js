@@ -21,7 +21,7 @@ class RecipeSearch extends Component {
                            <input type="text"
                                   name="search"
                                   className="form-control"
-                                  placeholder="chicken,onions,carrots"
+                                  placeholder="find by recipe name or contained ingredients"
                                   value={value}
                                   onChange={handleChange}
                            />

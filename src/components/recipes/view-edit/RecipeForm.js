@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Form, Button} from "react-bootstrap";
-// import { v4 as uuidv4 } from 'uuid';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPaperPlane, faTrash} from "@fortawesome/free-solid-svg-icons";
 import noimage from "../../../assets/inf.png";
@@ -10,7 +9,6 @@ import {createRecipe, getUploadUrl, patchRecipe, uploadFileToBucket} from "../..
 const RecipeForm = (props) => {
    const [recipe, setRecipe] = useState(() => {
       return {
-         //recipeId: props.recipe ? props.recipe.recipeId: null,
          attachmentUrl: props.recipe ? props.recipe.attachmentUrl : '',
          category: props.recipe ? props.recipe.category : '',
          title: props.recipe ? props.recipe.title : '',
@@ -41,7 +39,7 @@ const RecipeForm = (props) => {
          const idToken = await getIdTokenClaims();
          token = idToken.__raw
       }
-      console.log(`returninng token ${token}`)
+      // console.log(`returninng token ${token}`)
       return token
    }
 
@@ -56,7 +54,6 @@ const RecipeForm = (props) => {
       });
 
       if (allReqFieldsFilled) {
-         // const id = (isEdit ? recipe.recipeId : uuidv4())
          const idToken = await getToken()
 
          let id = recipeId

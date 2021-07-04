@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileSignature, faHeart} from "@fortawesome/free-solid-svg-icons";
 import LinesEllipsis from "react-lines-ellipsis";
+import Popup from 'reactjs-popup';
 
 import inf from '../../assets/inf.png'
+import RecipeDetails from "./RecipeDetails";
 
 class RecipeItem extends Component {
 
@@ -15,13 +17,17 @@ class RecipeItem extends Component {
 
        const {
           publisher,
-          recipe_id,
+          recipeId,
           title} = this.props.recipe;
 
        const {handleDetails} = this.props;
 
-       const image_url = this.props.recipe.image_url || inf;
-       const social_rank = this.props.recipe.social_rank || 0;
+       const image_url = this.props.recipe.attachmentUrl || inf;
+       const social_rank = this.props.recipe.socialRank || 0;
+
+       const contentStyle = { background: 'rgba(100, 100, 100, 0.3)' };
+       const overlayStyle = { background: 'rgba(0,0,0,0.8)' };
+       const arrowStyle = { color: '#000' }; // style for an svg element
 
         return (
            <React.Fragment>
@@ -46,13 +52,19 @@ class RecipeItem extends Component {
                      </div>
                      <div className="card-footer bottom-round-20">
 
-                        <button
-                           type="button"
-                           className="btn btn-success text-capitalize rounded-pill"
-                           onClick={() => handleDetails(0, recipe_id)} >
-                           <FontAwesomeIcon icon={faFileSignature} className="mr-1" />
-                           Details
-                        </button>
+                        <Popup
+                           trigger={<button
+                              type="button"
+                              className="btn btn-success text-capitalize rounded-pill"
+                           >
+                              <FontAwesomeIcon icon={faFileSignature} className="mr-1" />
+                              Details
+                           </button>}
+                           {...{ contentStyle, overlayStyle, arrowStyle }}
+                        >
+                          <RecipeDetails recipe={this.props.recipe} handleDetails={handleDetails} />
+                        </Popup>
+
                         <span
                            className="btn">
                            <FontAwesomeIcon color="red" icon={faHeart} className="mr-1" />
