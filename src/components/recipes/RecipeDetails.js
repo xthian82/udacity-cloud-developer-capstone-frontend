@@ -1,91 +1,78 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-import {recipe} from "../../utils/tempDetails";
-import {faChevronCircleLeft, faHeart,} from "@fortawesome/free-solid-svg-icons";
+import {faHeart} from "@fortawesome/free-solid-svg-icons";
+import noImg from '../../assets/inf.png'
+import _ from "lodash";
 
-class RecipeDetails extends Component {
+export const RecipeDetails = (props) => {
 
-   constructor(props) {
-      super(props);
-
-      this.state = {
-         recipe: recipe,
-         url: `someurl?id=${this.props.id}`,
-         handleIndex: 1
+   const [recipe, setRecipe] = useState(() => {
+      return {
+         attachmentUrl: props.recipe ? props.recipe.attachmentUrl : noImg,
+         category: props.recipe ? props.recipe.category : 'no category',
+         socialRank: props.recipe ? props.recipe.socialRank : 0,
+         title: props.recipe ? props.recipe.title : '',
+         ingredients: props.recipe ? props.recipe.ingredients : [],
+         createdAt: props.recipe ? props.recipe.createdAt : ''
       }
-   }
+   });
 
-   async componentDidMount() {
-      try {
-         //const data = await fetch(url);
-         //const jsonData = await data.json();
-         this.setState({
-            recipe: recipe
-         });
-      } catch (e) {
-         console.log(e);
+   useEffect(() => {
+      async function fetchData() {
+         try {
+            setRecipe(props.recipe)
+         } catch (error) {
+            console.log(error);
+         }
       }
-   };
 
-   render() {
+      fetchData()
 
-      const {
-         image_url,
-         publisher,
-         title,
-         social_rank,
-         ingredients
-      } = this.state.recipe;
+      return () => {}
+   }, []);
 
-      const {handleIndex} = this.props;
-      console.log(`id = ${handleIndex}`);
       return (
 
          <React.Fragment>
             <div className="container">
                <div className="row">
                   <div className="col-10 mx-auto col-md-6 my-3">
-                     <button
-                        type="button"
-                        className="btn btn-warning mb-5 text-capitalize"
-                        onClick={() => handleIndex(1) }
-                     >
-                        <FontAwesomeIcon icon={faChevronCircleLeft} className="mr-1" />
-                         Back
-                     </button>
+
                      <img
-                        src={image_url}
-                        className="d-block w-100 full-round-22"
+                        src={recipe.attachmentUrl}
+                        className="d-block w-100 d-flexs full-round-22"
                         alt=""/>
                   </div>
                   <div className="col-10 mx-auto col-md-6 my-3">
-                     <h6 className="text-uppercase">{title}</h6>
+                     <h6 className="text-uppercase">{recipe.title}</h6>
+                     <h6>{recipe.category}</h6>
                      <h6 className="text-warning text-capitalize text-publisher-med">
-                        provided by {publisher}
+                        provided by {recipe.publisher}
                      </h6>
+                     <h6 className="text-uppercase">{recipe.category}</h6>
                      <ul className="list-group mt-4">
                         <h2 className="mt-3 mb-4">Ingredients</h2>
                         {
-                           ingredients.map((item, index) => {
+
+                        !_.isEmpty(recipe.ingredients) ? (
+                           recipe.ingredients.map((item, index) => {
                               return(
-                                 <li className="list-group-item text-ingredient">
-                                    {item}
-                                 </li>
+                                 <li className="list-group-item text-ingredient">{item}</li>
                               )
-                           })
+                           })) : (<p className="message">No ingredients.</p>)
                         }
                      </ul>
+                     <h6 className="text-uppercase">Created: {recipe.createdAt}</h6>
                      <span className="btn">
                         <FontAwesomeIcon color="red" icon={faHeart} className="mr-1" />
-                        <span>{social_rank}</span>
+                        <span>{recipe.socialRank}</span>
                      </span>
                   </div>
                </div>
             </div>
          </React.Fragment>
-      );
-   }
+      )
 }
 
 export default RecipeDetails;
